@@ -12,16 +12,22 @@ public struct GenericUserPropertyGet: AcknowledgedGenericMessage {
     public static let responseType: StaticMeshMessage.Type = GenericUserPropertyStatus.self
     
     public var parameters: Data? {
-        return nil
+        return Data() + propertyId
     }
     
-    public init() {
-        // Empty
+    public let propertyId: UInt16
+    
+    /// Creates the Generic User Property Get message.
+    ///
+    ///   - propertyId: The property ID
+    public init(_ propertyId: UInt16) {
+        self.propertyId = propertyId
     }
     
     public init?(parameters: Data) {
-        guard parameters.isEmpty else {
+        guard parameters.count == 2 else {
             return nil
         }
+        propertyId = parameters.read(fromOffset: 0)
     }
 }

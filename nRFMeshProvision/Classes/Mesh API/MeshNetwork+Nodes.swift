@@ -92,6 +92,38 @@ public extension MeshNetwork {
         }
     }
     
+    /// Returns whether the provided Node in the mesh network matches
+    /// given Hash and Random. This is used to match the Node Identity beacon.
+    ///
+    /// - parameter hash:   The Hash value.
+    /// - parameter random: The Random value.
+    /// - returns: `True` if the given parameters match any node of this
+    ///            mesh network.
+    func matches(node: Node, advertisementData: [String : Any]) -> Bool {
+        let helper = OpenSSLHelper()
+
+        let nodeIdentity = advertisementData.nodeIdentity
+        
+        // Data are: 48 bits of Padding (0s), 64 bit Random and Unicast Address.
+        let data = Data(repeating: 0, count: 6) + nodeIdentity?.random + node.unicastAddress.bigEndian
+        
+        for networkKey in node.networkKeys {
+            let encryptedData = helper.calculateEvalue(with: data, andKey: networkKey.keys.identityKey)!
+            if encryptedData.dropFirst(8) == nodeIdentity?.hash {
+                return true
+            }
+            // If the Key refresh procedure is in place, the identity might have been
+            // generated with the old key.
+            if let oldIdentityKey = networkKey.oldKeys?.identityKey {
+                let encryptedData = helper.calculateEvalue(with: data, andKey: oldIdentityKey)!
+                if encryptedData.dropFirst(8) == nodeIdentity?.hash {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+    
     /// Returns whether any of the Nodes in the mesh network matches
     /// given Hash and Random. This is used to match the Node Identity beacon.
     ///

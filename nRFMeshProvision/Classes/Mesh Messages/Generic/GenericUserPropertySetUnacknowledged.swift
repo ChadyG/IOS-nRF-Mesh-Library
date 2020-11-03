@@ -11,11 +11,10 @@ public struct GenericUserPropertySetUnacknowledged: GenericMessage {
     public static var opCode: UInt32 = 0x4D
     
     public var parameters: Data? {
-        return Data() + propertyId + userAccess + data
+        return Data() + propertyId + data
     }
     
     public let propertyId: UInt16
-    public let userAccess: UInt8
     public let data: Data
     
     
@@ -24,7 +23,6 @@ public struct GenericUserPropertySetUnacknowledged: GenericMessage {
     ///   - propertyId: The property ID
     public init(_ propertyId: UInt16) {
         self.propertyId = propertyId
-        self.userAccess = 0x03
         self.data = Data()
     }
     
@@ -32,11 +30,9 @@ public struct GenericUserPropertySetUnacknowledged: GenericMessage {
     ///
     /// - parameters:
     ///   - propertyId: The property ID
-    ///   - userAccess: The user access level
     ///   - data: The value of the property
-    public init(_ propertyId: UInt16, userAccess: UInt8, data: Data) {
+    public init(_ propertyId: UInt16, data: Data) {
         self.propertyId = propertyId
-        self.userAccess = userAccess
         self.data = data
     }
     
@@ -45,7 +41,6 @@ public struct GenericUserPropertySetUnacknowledged: GenericMessage {
             return nil
         }
         propertyId = parameters.read(fromOffset: 0)
-        userAccess = parameters[2]
-        data =  parameters.subdata(in: 3..<parameters.count)
+        data =  parameters.subdata(in: 2..<parameters.count)
     }
 }

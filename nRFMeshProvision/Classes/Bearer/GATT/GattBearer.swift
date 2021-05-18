@@ -33,7 +33,7 @@ import CoreBluetooth
 
 open class GattBearer: BaseGattProxyBearer<MeshProxyService>, MeshBearer {
     
-    public override var supportedPduTypes: PduTypes {
+    open override var supportedPduTypes: PduTypes {
         return [.networkPdu, .meshBeacon, .proxyConfiguration]
     }
     

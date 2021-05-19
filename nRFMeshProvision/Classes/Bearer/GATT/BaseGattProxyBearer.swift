@@ -65,7 +65,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
         return supportedPduTypes.contains(PduTypes(rawValue: pduType.mask))
     }
     
-    public var isOpen: Bool {
+    open var isOpen: Bool {
         return basePeripheral.state == .connected &&
                dataOutCharacteristic?.isNotifying ?? false
     }
@@ -118,9 +118,13 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     open func close() {
         if basePeripheral?.state == .connected || basePeripheral?.state == .connecting {
             logger?.v(.bearer, "Cancelling connection...")
-            centralManager.cancelPeripheralConnection(basePeripheral)            
+            centralManager.cancelPeripheralConnection(basePeripheral)
         }
         isOpened = false
+    }
+    
+    open func setBasePeripheral(peripheral: CBPeripheral) {
+        basePeripheral = peripheral
     }
     
     open func send(_ data: Data, ofType type: PduType) throws {

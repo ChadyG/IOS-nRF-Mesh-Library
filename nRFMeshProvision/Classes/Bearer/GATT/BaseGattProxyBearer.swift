@@ -189,7 +189,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     // MARK: - Implementation
     
     /// Starts service discovery, only given Service.
-    public func discoverServices() {
+    open func discoverServices() {
         logger?.v(.bearer, "Discovering services...")
         basePeripheral.discoverServices([Service.uuid])
     }
@@ -197,7 +197,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     /// Starts characteristic discovery for Data In and Data Out Characteristics.
     ///
     /// - parameter service: The service to look for the characteristics in.
-    public func discoverCharacteristics(for service: CBService) {
+    open func discoverCharacteristics(for service: CBService) {
         logger?.v(.bearer, "Discovering characteristrics...")
         basePeripheral.discoverCharacteristics([Service.dataInUuid, Service.dataOutUuid], for: service)
     }
@@ -205,7 +205,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     /// Enables notification for the given characteristic.
     ///
     /// - parameter characteristic: The characteristic to enable notifications for.
-    public func enableNotifications(for characteristic: CBCharacteristic) {
+    open func enableNotifications(for characteristic: CBCharacteristic) {
         logger?.v(.bearer, "Enabling notifications...")
         basePeripheral.setNotifyValue(true, for: characteristic)
     }

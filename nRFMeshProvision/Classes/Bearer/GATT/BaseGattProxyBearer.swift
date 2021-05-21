@@ -43,16 +43,16 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     public weak var dataDelegate: BearerDataDelegate?
     public weak var logger: LoggerDelegate?
     
-    private let centralManager: CBCentralManager
-    private var basePeripheral: CBPeripheral!
-    private let mutex = DispatchQueue(label: "GattBearer")
+    public let centralManager: CBCentralManager
+    public var basePeripheral: CBPeripheral!
+    public let mutex = DispatchQueue(label: "GattBearer")
     
     /// The protocol used for segmentation and reassembly.
-    private let protocolHandler: ProxyProtocolHandler
+    public let protocolHandler: ProxyProtocolHandler
     /// The queue of PDUs to be sent. Used if the perpheral is busy.
-    private var queue: [Data] = []
+    public var queue: [Data] = []
     /// A flag indicating whether `open()` method was called.
-    private var isOpened: Bool = false
+    public var isOpened: Bool = false
     
     // MARK: - Computed properties
     
@@ -83,8 +83,8 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     
     // MARK: - Characteristic properties
     
-    private var dataInCharacteristic:  CBCharacteristic?
-    private var dataOutCharacteristic: CBCharacteristic?
+    public var dataInCharacteristic:  CBCharacteristic?
+    public var dataOutCharacteristic: CBCharacteristic?
     
     // MARK: - Public API
     
@@ -189,7 +189,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     // MARK: - Implementation
     
     /// Starts service discovery, only given Service.
-    private func discoverServices() {
+    public func discoverServices() {
         logger?.v(.bearer, "Discovering services...")
         basePeripheral.discoverServices([Service.uuid])
     }
@@ -197,7 +197,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     /// Starts characteristic discovery for Data In and Data Out Characteristics.
     ///
     /// - parameter service: The service to look for the characteristics in.
-    private func discoverCharacteristics(for service: CBService) {
+    public func discoverCharacteristics(for service: CBService) {
         logger?.v(.bearer, "Discovering characteristrics...")
         basePeripheral.discoverCharacteristics([Service.dataInUuid, Service.dataOutUuid], for: service)
     }
@@ -205,7 +205,7 @@ open class BaseGattProxyBearer<Service: MeshService>: NSObject, Bearer, CBCentra
     /// Enables notification for the given characteristic.
     ///
     /// - parameter characteristic: The characteristic to enable notifications for.
-    private func enableNotifications(for characteristic: CBCharacteristic) {
+    public func enableNotifications(for characteristic: CBCharacteristic) {
         logger?.v(.bearer, "Enabling notifications...")
         basePeripheral.setNotifyValue(true, for: characteristic)
     }
